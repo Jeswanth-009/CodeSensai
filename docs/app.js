@@ -64,23 +64,25 @@ async function analyzeComplexity() {
 }
 
 function renderExplanation(data, mode) {
-  const hinglishBadge = mode === 'hinglish' ? '<div style="background:#2d1b4e;border:1px solid #cba6f7;border-radius:6px;padding:6px 10px;margin-bottom:10px;font-size:11px;color:#cba6f7">🇮🇳 Hinglish Mode Active</div>' : '';
+  const hinglishBadge = mode === 'hinglish' ? '<div class="notice-badge">Hinglish Mode Active</div>' : '';
 
   const html = `
-    ${hinglishBadge}
-    ${data.errorExplanation ? renderCard('⚠️', 'Error Explained', '#f38ba8', data.errorExplanation) : ''}
-    ${renderCard('🟢', 'Level 1: What is happening?', '#a6e3a1', data.level1)}
-    ${renderCard('🔵', 'Level 2: Why this design?', '#89b4fa', data.level2)}
-    ${renderCard('🟠', 'Common Pitfalls', '#fab387', data.pitfalls)}
-    ${renderCard('🔮', 'Socratic Question', '#cba6f7', data.socraticQuestion)}
-    <div style="margin-top:12px">
-      <div style="font-size:12px;font-weight:600;color:#6c7086;margin-bottom:6px">💬 Answer the question or ask follow-up:</div>
-      <div style="display:flex;gap:6px">
-        <input id="followupInput" placeholder="Type your answer..." style="flex:1;background:#1e1e2e;border:1px solid #3a3a5e;border-radius:6px;padding:8px;color:#cdd6f4;font-size:12px;outline:none">
-        <button class="btn btn-primary" id="btnFollowup" style="padding:8px 12px">➤</button>
+    <div class="result-stack">
+      ${hinglishBadge}
+      ${data.errorExplanation ? renderCard('Error Explained', '#e57a6f', data.errorExplanation) : ''}
+      ${renderCard('Level 1: What is happening?', '#3e8f86', data.level1)}
+      ${renderCard('Level 2: Why this design?', '#5f9be6', data.level2)}
+      ${renderCard('Common Pitfalls', '#d8a33f', data.pitfalls)}
+      ${renderCard('Socratic Question', '#9b78d6', data.socraticQuestion)}
+      <div class="followup-box">
+        <div class="followup-label">Answer the question or ask a follow-up.</div>
+        <div class="followup-row">
+          <input class="followup-input" id="followupInput" placeholder="Type your answer...">
+          <button class="btn btn-primary btn-send" id="btnFollowup">➤</button>
+        </div>
       </div>
+      <div id="chatArea" class="chat-area"></div>
     </div>
-    <div id="chatArea" style="margin-top:10px"></div>
   `;
 
   document.getElementById('resultState').innerHTML = html;
@@ -94,29 +96,29 @@ function renderExplanation(data, mode) {
 }
 
 function renderComplexity(data) {
-  const colors = { green: '#a6e3a1', yellow: '#f9e2af', red: '#f38ba8' };
-  const color = colors[data.badge] || '#cdd6f4';
+  const colors = { green: '#67c0b5', yellow: '#f4b860', red: '#f47f74' };
+  const color = colors[data.badge] || '#5e738a';
   const html = `
-    <div style="background:#1e1e2e;border-radius:8px;padding:12px;border:1px solid ${color}">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <span style="font-weight:700;color:${color}">⚡ Complexity Analysis</span>
-        <div style="display:flex;gap:6px">
-          <span style="background:${color};color:#1e1e2e;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700">Time: ${data.timeComplexity}</span>
-          <span style="background:#3a3a5e;color:#cdd6f4;border-radius:4px;padding:2px 8px;font-size:11px">Space: ${data.spaceComplexity}</span>
+    <div class="complexity-card">
+      <div class="complexity-top">
+        <h3 style="color:${color}">Complexity Analysis</h3>
+        <div class="complexity-badges">
+          <span class="complexity-pill" style="background:${color};color:#081018">Time: ${data.timeComplexity}</span>
+          <span class="complexity-pill" style="background:#edf2f8;color:#2d4358">Space: ${data.spaceComplexity}</span>
         </div>
       </div>
-      <div style="font-size:12px;line-height:1.6">${data.explanation}</div>
-      ${data.optimization ? `<div style="margin-top:8px;padding:8px;background:#2a2a3e;border-radius:6px;font-size:12px;color:#a6e3a1">💡 ${data.optimization}</div>` : ''}
+      <div class="complexity-body">${data.explanation}</div>
+      ${data.optimization ? `<div class="optimization-note">Optimization: ${data.optimization}</div>` : ''}
     </div>
   `;
   document.getElementById('resultState').innerHTML = html;
   showState('result');
 }
 
-function renderCard(icon, title, color, content) {
+function renderCard(title, color, content) {
   return `
-    <div class="card" style="border-color:${color};margin-bottom:8px">
-      <div class="card-header" style="color:${color}">${icon} ${title}</div>
+    <div class="card" style="--accent:${color}">
+      <div class="card-header">${title}</div>
       <div class="card-body">${content}</div>
     </div>
   `;
@@ -130,7 +132,7 @@ async function sendFollowup() {
   const apiUrl = getApiUrl();
   const chatArea = document.getElementById('chatArea');
 
-  chatArea.innerHTML += `<div style="background:#2a2a3e;border-left:3px solid #89b4fa;border-radius:6px;padding:8px;margin-bottom:6px;font-size:12px"><span style="color:#6c7086;font-size:10px">👨‍💻 You</span><br>${escapeHtml(answer)}</div>`;
+  chatArea.innerHTML += `<div class="chat-bubble user"><strong>You</strong>${escapeHtml(answer)}</div>`;
   input.value = '';
 
   try {
@@ -146,10 +148,10 @@ async function sendFollowup() {
       })
     });
     const data = await response.json();
-    const color = data.isCorrect ? '#a6e3a1' : '#fab387';
-    chatArea.innerHTML += `<div style="background:#1a2a1a;border-left:3px solid ${color};border-radius:6px;padding:8px;margin-bottom:6px;font-size:12px"><span style="color:#6c7086;font-size:10px">🥋 CodeSensei ${data.isCorrect ? '✅' : '🔄'}</span><br>${escapeHtml(data.feedback)}<br><br><em style="color:#6c7086">${escapeHtml(data.deeperInsight)}</em></div>`;
+    const accent = data.isCorrect ? '#67c0b5' : '#f4b860';
+    chatArea.innerHTML += `<div class="chat-bubble bot" style="border-left-color:${accent}"><strong>CodeSensei ${data.isCorrect ? 'Correct' : 'Guidance'}</strong>${escapeHtml(data.feedback)}<em>${escapeHtml(data.deeperInsight)}</em></div>`;
   } catch (err) {
-    chatArea.innerHTML += `<div style="color:#f38ba8;font-size:12px">Error: ${escapeHtml(err.message)}</div>`;
+    chatArea.innerHTML += `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
   }
 }
 
@@ -164,14 +166,24 @@ function setLoading(show) {
 }
 
 function setError(message) {
-  document.getElementById('errorState').innerHTML = `<div class="error">⚠️ ${escapeHtml(message)}</div>`;
+  document.getElementById('errorState').innerHTML = `<div class="error">${escapeHtml(message)}</div>`;
   showState('error');
 }
 
 function showState(state) {
-  ['emptyState', 'loadingState', 'errorState', 'resultState'].forEach(id => {
+  const ids = ['emptyState', 'loadingState', 'errorState', 'resultState'];
+  ids.forEach(id => {
     document.getElementById(id).style.display = 'none';
   });
-  const map = { empty: 'emptyState', loading: 'loadingState', error: 'errorState', result: 'resultState' };
-  if (map[state]) document.getElementById(map[state]).style.display = 'block';
+
+  const config = {
+    empty: { id: 'emptyState', display: 'grid' },
+    loading: { id: 'loadingState', display: 'grid' },
+    error: { id: 'errorState', display: 'block' },
+    result: { id: 'resultState', display: 'block' }
+  };
+
+  if (config[state]) {
+    document.getElementById(config[state].id).style.display = config[state].display;
+  }
 }
