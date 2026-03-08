@@ -20,6 +20,11 @@
     "code explanation",
     "AWS"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jeswanth-009/CodeSensai.git"
+  },
+  "license": "MIT",
   "activationEvents": [
     "onStartupFinished"
   ],
