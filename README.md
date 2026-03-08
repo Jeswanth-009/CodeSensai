@@ -57,7 +57,7 @@ These design choices emphasize **learning**, **cost‑efficiency**, **cultural r
 
 ## 🌟 Features (updated)
 
-...
+The sections before talked about creative implementation; here are the standout capabilities that users will actually experience when they open the extension.  Those creative decisions above directly enable these features — they’re not marketing fluff but concrete behaviors you can test.
 
 ---
 
