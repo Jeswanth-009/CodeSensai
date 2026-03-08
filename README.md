@@ -23,6 +23,7 @@ All of these innovations are documented, tested, and open‑sourced — giving y
 [![DynamoDB](https://img.shields.io/badge/AWS-DynamoDB-4053D6?logo=amazon-dynamodb)](https://aws.amazon.com/dynamodb/)
 [![VS Code](https://img.shields.io/badge/VS%20Code-Extension%201.85%2B-007ACC?logo=visual-studio-code)](https://code.visualstudio.com/)
 [![Region](https://img.shields.io/badge/Region-ap--south--2%20Hyderabad-orange?logo=amazon-aws)](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/)
+[![Marketplace](https://img.shields.io/visual-studio-marketplace/v/JeswanthSaiKancharana.codesensei-ide?logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=JeswanthSaiKancharana.codesensei-ide)
 [![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-181717?logo=github)](https://jeswanth-009.github.io/CodeSensai/)
 
 ---
@@ -131,6 +132,18 @@ The sections before talked about creative implementation; here are the standout 
 - AWS SAM CLI
 - Node.js 20+
 - VS Code 1.85+
+
+### 🔽 Install from the Marketplace
+
+1. Open Visual Studio Code
+2. Navigate to the Extensions view (`Ctrl+Shift+X` or `⇧⌘X`)
+3. Search for **CodeSensei IDE** or go directly to
+   [https://marketplace.visualstudio.com/items?itemName=JeswanthSaiKancharana.codesensei-ide](https://marketplace.visualstudio.com/items?itemName=JeswanthSaiKancharana.codesensei-ide)
+4. Click **Install** and reload VS Code when prompted.
+
+*The version on the Marketplace is kept in sync with this repository; simply update and reinstall to pick up the latest features.*
+
+---
 
 ### 1. Deploy Backend (once per account)
 
