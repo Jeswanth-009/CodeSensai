@@ -1,0 +1,9 @@
+{
+  "name": "codesensei-history",
+  "version": "1.0.0",
+  "description": "CodeSensei history Lambda function",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.500.0"
+  }
+}

@@ -1,0 +1,182 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: CodeSensei - AI Reasoning Coach for Indian Developers
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 30
+    MemorySize: 128
+    Environment:
+      Variables:
+        AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+        HISTORY_TABLE: !Ref HistoryTable
+  Api:
+    Cors:
+      AllowMethods: "'GET,POST,DELETE,OPTIONS'"
+      AllowHeaders: "'Content-Type,Authorization'"
+      AllowOrigin: "'*'"
+
+Resources:
+  CodeSenseiApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Description: CodeSensei REST API
+
+  ExplainFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: codesensei-explain
+      Handler: index.handler
+      CodeUri: ../lambda/explain/
+      Description: 4-layer code explanation using Bedrock
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref HistoryTable
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource: "*"
+      Events:
+        ExplainPost:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CodeSenseiApi
+            Path: /explain
+            Method: POST
+        ExplainOptions:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CodeSenseiApi
+            Path: /explain
+            Method: OPTIONS
+
+  FollowupFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: codesensei-followup
+      Handler: index.handler
+      CodeUri: ../lambda/followup/
+      Description: Socratic follow-up evaluation
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource: "*"
+      Events:
+        FollowupPost:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CodeSenseiApi
+            Path: /followup
+            Method: POST
+        FollowupOptions:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CodeSenseiApi
+            Path: /followup
+            Method: OPTIONS
+
+  ComplexityFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: codesensei-complexity
+      Handler: index.handler
+      CodeUri: ../lambda/complexity/
+      Description: Big-O complexity analyzer
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource: "*"
+      Events:
+        ComplexityPost:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CodeSenseiApi
+            Path: /complexity
+            Method: POST
+        ComplexityOptions:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CodeSenseiApi
+            Path: /complexity
+            Method: OPTIONS
+
+  HistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: codesensei-history
+      Handler: index.handler
+      CodeUri: ../lambda/history/
+      Description: History storage and retrieval
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref HistoryTable
+      Events:
+        HistoryGet:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CodeSenseiApi
+            Path: /history
+            Method: GET
+        HistoryDelete:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CodeSenseiApi
+            Path: /history
+            Method: DELETE
+        HistoryOptions:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CodeSenseiApi
+            Path: /history
+            Method: OPTIONS
+
+  HealthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: codesensei-health
+      Handler: index.handler
+      CodeUri: ../lambda/health/
+      Description: Health check endpoint
+      Events:
+        HealthGet:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CodeSenseiApi
+            Path: /health
+            Method: GET
+
+  HistoryTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: codesensei-history
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${CodeSenseiApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+    Export:
+      Name: CodeSenseiApiUrl
+  HistoryTableName:
+    Description: DynamoDB table name
+    Value: !Ref HistoryTable

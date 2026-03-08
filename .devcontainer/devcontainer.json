@@ -1,0 +1,30 @@
+{
+  "name": "CodeSensei Dev",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "postCreateCommand": "cd lambda/explain && npm install && cd ../followup && npm install && cd ../complexity && npm install && cd ../history && npm install && cd ../health && npm install && cd ../../extension && npm install && npm run compile && cd ../server && npm install",
+  "forwardPorts": [3001, 3000],
+  "portsAttributes": {
+    "3001": {
+      "label": "CodeSensei API",
+      "onAutoForward": "notify",
+      "visibility": "public"
+    },
+    "3000": {
+      "label": "CodeSensei Web Demo",
+      "onAutoForward": "openBrowser",
+      "visibility": "public"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "amazonwebservices.aws-toolkit-vscode"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeSensei 🥋 — AI Reasoning Coach for Indian Developers</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="header">
+    <div class="logo">🥋 CodeSensei</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:12px;color:#6c7086">AI Reasoning Coach for Indian Developers</span>
+      <span class="badge">AWS Bedrock Powered</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Left Panel: Input -->
+    <div class="panel">
+      <h2>📝 Paste Your Code</h2>
+      <input class="api-input" id="apiUrl" placeholder="Your AWS API URL: https://xxx.execute-api.ap-south-2.amazonaws.com/prod" />
+      <textarea id="codeInput" placeholder="// Paste your code here and click Explain&#10;function example() {&#10;  return array.filter(x => x > 0);&#10;}"></textarea>
+      <div class="controls">
+        <select id="language">
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="go">Go</option>
+          <option value="rust">Rust</option>
+        </select>
+        <button class="btn btn-primary" id="btnExplain">🥋 Explain</button>
+        <button class="btn btn-hinglish" id="btnHinglish">🇮🇳 Hinglish</button>
+        <button class="btn btn-complexity" id="btnComplexity">⚡ Complexity</button>
+      </div>
+      <div style="margin-top:12px">
+        <textarea id="errorInput" placeholder="Optional: Paste error message here..." style="min-height:80px"></textarea>
+      </div>
+    </div>
+
+    <!-- Right Panel: Output -->
+    <div class="panel" id="outputPanel">
+      <h2>🧠 CodeSensei Explains</h2>
+      <div class="empty" id="emptyState">
+        <div style="font-size:48px;margin-bottom:12px">🥋</div>
+        <div style="font-weight:600;color:#cdd6f4;margin-bottom:8px">Paste code and click Explain</div>
+        <div style="font-size:12px">CodeSensei will break down your code across 4 reasoning layers</div>
+      </div>
+      <div id="loadingState" style="display:none" class="loading">
+        <div style="font-size:32px;margin-bottom:12px">⚙️</div>
+        <div>AWS Bedrock is analyzing your code...</div>
+      </div>
+      <div id="errorState" style="display:none"></div>
+      <div id="resultState" style="display:none"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

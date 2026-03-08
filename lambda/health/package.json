@@ -1,0 +1,7 @@
+{
+  "name": "codesensei-health",
+  "version": "1.0.0",
+  "description": "CodeSensei health check Lambda function",
+  "main": "index.js",
+  "dependencies": {}
+}
