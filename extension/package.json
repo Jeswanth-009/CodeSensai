@@ -1,9 +1,9 @@
 {
-  "name": "codesensei",
+  "name": "codesensei-ide",
   "displayName": "CodeSensei 🥋",
   "description": "AI Reasoning Coach for Indian Developers — Powered by AWS Bedrock",
-  "version": "1.0.0",
-  "publisher": "xfactor",
+  "version": "1.0.1",
+  "publisher": "JeswanthSaiKancharana",
   "engines": {
     "vscode": "^1.85.0"
   },
